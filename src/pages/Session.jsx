@@ -21,6 +21,7 @@ function envString(key, fallback) {
   return s ? s : fallback;
 }
 
+const LIVEAVATAR_FULL_AVATAR_ID  = envString("VITE_AVATAR_ID",            "");
 const LIVEAVATAR_FULL_VOICE_ID   = envString("VITE_LIVEAVATAR_VOICE_ID",  "de5574fc-009e-4a01-a881-9919ef8f5a0c");
 const LIVEAVATAR_FULL_CONTEXT_ID = envString("VITE_LIVEAVATAR_CONTEXT_ID", "062b8d8c-5a16-4f14-b838-a507f5affee9");
 const LIVEAVATAR_FULL_LANGUAGE   = envString("VITE_LIVEAVATAR_LANGUAGE",   "en");
@@ -640,7 +641,7 @@ export default function Session() {
                     <HeyGenLiveAvatar
                       ref={avatarUiRef}
                       apiBase={avatarApiBase}
-                      avatarId={undefined}
+                      avatarId={LIVEAVATAR_FULL_AVATAR_ID || undefined}
                       isSandbox={false}
                       suppressHeygenAIRef={suppressHeygenAIRef}
                       onAvatarTranscript={handleAvatarTranscript}
