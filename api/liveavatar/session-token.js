@@ -34,22 +34,32 @@ export default async function handler(req, res) {
     dynamic_variables = {},
   } = body;
 
+  const reqBody = {
+    mode,
+    avatar_id,
+    is_sandbox,
+  };
+
+  if (mode === "FULL") {
+    const persona = { language };
+    if (context_id) persona.context_id = context_id;
+    if (voice_id) persona.voice_id = voice_id;
+    reqBody.interactivity_type = "CONVERSATIONAL";
+    reqBody.avatar_persona = persona;
+    if (Object.keys(dynamic_variables).length > 0) {
+      reqBody.dynamic_variables = dynamic_variables;
+    }
+  }
+
   try {
-    const liveRes = await fetch(`${LIVEAVATAR_API_BASE}/v1/sessions`, {
+    const liveRes = await fetch(`${LIVEAVATAR_API_BASE}/v1/sessions/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Api-Key": apiKey,
+        "Accept": "application/json",
+        "X-API-KEY": apiKey,
       },
-      body: JSON.stringify({
-        avatar_id,
-        is_sandbox,
-        mode,
-        voice_id,
-        context_id,
-        language,
-        dynamic_variables,
-      }),
+      body: JSON.stringify(reqBody),
     });
 
     const data = await liveRes.json().catch(() => ({}));
@@ -62,7 +72,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Response shape: { data: { session_token: "..." } } or { session_token: "..." }
     const session_token = data?.data?.session_token || data?.session_token;
     if (!session_token) {
       console.error("[session-token] No session_token in response:", data);
