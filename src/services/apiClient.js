@@ -5,7 +5,8 @@ export function getApiBaseUrl() {
 }
 
 export async function apiFetch(path, options = {}) {
-  const url = new URL(path, getApiBaseUrl());
+  const base = getApiBaseUrl().replace(/\/+$/, "");
+  const url = base.startsWith("http") ? new URL(path, base).toString() : `${base}${path}`;
   const {
     method = "GET",
     headers = {},
@@ -22,7 +23,7 @@ export async function apiFetch(path, options = {}) {
     normalizedHeaders.set("Content-Type", "application/json");
   }
 
-  const res = await fetch(url.toString(), {
+  const res = await fetch(url, {
     method,
     headers: normalizedHeaders,
     body: hasBody && !isFormData && typeof body !== "string" ? JSON.stringify(body) : body,
