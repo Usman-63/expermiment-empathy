@@ -461,7 +461,7 @@ export default function Session() {
   const startSessionUi = useCallback(() => {
     cancelledRef.current = false;
     setUserStarted(true);
-    window.setTimeout(() => { avatarUiRef.current?.start?.().catch((e) => setAvatarError(e?.message || "Failed to start")); }, 50);
+    window.setTimeout(() => { avatarUiRef.current?.start?.().catch((e) => setAvatarError(e?.message || "Failed to start")); }, 300);
   }, []);
 
   const endSessionUi = useCallback(() => {
@@ -616,7 +616,7 @@ export default function Session() {
         </div>
 
         <div className="sp-shell">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {!userStarted ? (
               <motion.div key="start-screen" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 1.05 }} className="sp-startScreen">
                 <div className="sp-startCopy">
